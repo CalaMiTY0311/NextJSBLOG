@@ -1,0 +1,9 @@
+# *
+User-agent: *
+Allow: /
+
+# Host
+Host: https://maintainhoon.vercel.app/
+
+# Sitemaps
+Sitemap: https://maintainhoon.vercel.app/sitemap.xml

@@ -1,13 +1,22 @@
-import Link from "next/link";
+import Link from 'next/link';
 
-const BlogPost = ({ date, title, des, slug }) => {
+interface BlogPostProps {
+  date: string;
+  title: string;
+  des: string;
+  slug: string;
+}
+
+const BlogPost = ({ date, title, des, slug }: BlogPostProps) => {
   return (
-    <Link href={`/blog/${slug}`} passHref>
-      <a className="w-full my-7 hover:-translate-x-1.5">
-        <div className="font-medium text-xs text-gray-400">{date}</div>
-        <div className={`font-extrabold text-2xl mt-2`}>{title}</div>
-        <div className={`font-medium text-gray-600 text-xl mt-1`}>{des}</div>
-      </a>
+    <Link href={`/blog/post/${slug}`} passHref className="w-full my-7">
+      <div className="font-medium text-xs transition text-gray-500 dark:text-gray-300">{date}</div>
+      <div className="font-extrabold text-xl sm:text-2xl mt-2 transition text-black dark:text-white hover:text-green-500 dark:hover:text-green-500">
+        {title}
+      </div>
+      <div className="font-medium text-lg transition text-gray-600 dark:text-gray-400 sm:text-xl mt-1">
+        {des}
+      </div>
     </Link>
   );
 };
