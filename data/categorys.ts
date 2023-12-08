@@ -5,6 +5,6 @@ export const categorys: { title: string; keyword: string }[] = [
   { title: '🖥 Web', keyword: 'web' },
   { title: '👨🏻‍🏫 React', keyword: 'react' },
   { title: '⚙️ Git', keyword: 'git' },
-  { title: '📝 정리', keyword: 'arrangement' },
+  { title: '📝 알고리즘', keyword: 'Algorithm' },
   { title: '🎸 기타', keyword: 'other' },
 ];
