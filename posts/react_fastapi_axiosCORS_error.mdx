@@ -1,0 +1,92 @@
+---
+title: react -> axios -> fastapi CORS 에러 해결
+date: 2023-12-15
+description: react-fastapi axios CORS 에러 해결
+category: react
+---
+
+# 1. FastAPI(서버)의 CORS 에러 대응 
+
+---
+
+이 해결방법은 로컬과 클라와 서버를 전부 배포를 완료 후에도 정상 작동을 확인 후 포스팅을 하는 것이다.
+
+우선 서버 쪽인 Fastapi의 CORS 설정부터 보겠다
+
+```
+from fastapi.middleware.cors import CORSMiddleware
+from fastapi import FastAPI
+
+app = FastAPI()
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+```
+allow_origins에서는 CORS를 허용 할 도메인을 적는 곳이다.
+만약 로컬에서 하고있다면 "*" 대신 "http://localhost:8080" 배포서버라면 배포서버의 도메인을 넣으면된다
+
+<br />
+
+---
+
+# 2. React(클라이언트)의 CORS 에러 대응 - Axios 
+
+---
+
+```
+const submitForm = () => {
+    if (step === 8 && (stress === '' || isNaN(stress) || stress < 1 || stress > 10)) {
+      alert('스트레스는 1부터 10까지의 숫자 또는 공백이 아니어야합니다.');
+      return;
+    }
+    axios.post(
+      'https://man-vs-talmo-api.fly.dev/bald_persent_predict',
+      // 'http://localhost:8000/bald_persent_predict',
+      formData,
+      {
+        headers:{
+          'Accept': 'application/json',
+        }
+      }
+    )
+    .then(response => {
+      const resultPredict = Math.floor(parseInt(response.data.predict * 100));
+      setresultPredict(resultPredict);
+      navigate('/result', { state : { Predict : resultPredict } });
+    })
+    .catch(error => {
+      console.log('error:', error);
+    });
+  };
+```
+
+사용 하던 onclick함수를 가져와 봤다.
+
+내 코드에서 CORS 에러해결의 키 포인트는 headers설정이었다. 
+
+```
+{ headers: { 'Accept': 'application/json', } }
+```
+
+헤더를 추가했더니 서버 모니터링에서 200 응답과 값도 정상적으로 받아오는걸 확인하였다.
+withCredential:True와 헤더의 또 다른 옵션 중에 'Access-Control-Allow-Credentials':true
+를 사용하였지만 CORS에러는 계속 발생했을 뿐이여서 주석처리를 하였다.
+
+---
+
+# 🏃🏻 후기
+
+---
+
+사실 이 포스트를 쓴 것도 저번 해커톤 프로젝트에서도 CORS 에러로 한동안 고생을 많이했었는데
+이번 프로젝트에서도 똑같이 고생했다보니
+시간낭비하는건 너무 싫어서 포스트로 남겨두고 다음 프로젝트에서도 CORS가 발생하면
+바로 찾아올 수 있게 정리하게되었다.
+
+또한 화가 나는건 나 뿐만이 아닌 CORS 구글링만하면 이미 화가 많이 나신분들이 많다.
+그리고 ChatGPT 니 덕분에 시간 많이 날렸다 고마워 십새야
